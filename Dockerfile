@@ -32,6 +32,9 @@ RUN pecl install \
         imagick \
         xdebug
 
+COPY docker/php.ini /usr/local/etc/php/
+COPY docker/00-supervisor.conf /etc/supervisor/conf.d/
+
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /tmp/* /var/tmp/*

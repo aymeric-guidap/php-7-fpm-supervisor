@@ -27,10 +27,11 @@ RUN pecl install \
         mbstring \
         zip \
         sockets \
+        gd \
     && docker-php-ext-enable \
         opcache \
         imagick \
-        xdebug
+        gd
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-supervisor.conf /etc/supervisor/conf.d/

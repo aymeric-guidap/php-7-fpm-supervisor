@@ -39,3 +39,9 @@ COPY 00-supervisor.conf /etc/supervisor/conf.d/
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /tmp/* /var/tmp/*
+
+# forward request and error logs to docker log collector
+RUN echo Europe/Paris > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && chmod -R g+rwx /var/www/html \
+    && umask 0007

@@ -13,6 +13,8 @@ RUN apt-get update \
         rsync \
         make \
         libzip2 \
+        pngquant \
+        jpegoptim \
         && pecl install imagick \
         && docker-php-ext-enable imagick
 

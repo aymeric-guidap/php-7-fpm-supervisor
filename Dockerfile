@@ -3,8 +3,7 @@ LABEL authors="Sylvain Marty <sylvain@guidap.co>"
 
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
-    add-apt-repository 'deb http://deb.debian.org/debian stretch main' && \
-    add-apt-repository 'deb-src http://deb.debian.org/debian stretch main'
+    add-apt-repository 'deb http://deb.debian.org/debian stretch main'
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

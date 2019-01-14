@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:7.2-fpm
 LABEL authors="Sylvain Marty <sylvain@guidap.co>"
 
 RUN apt-get update \
@@ -12,7 +12,7 @@ RUN apt-get update \
         curl \
         rsync \
         make \
-        libzip2 \
+        libzip4 \
         pngquant \
         jpegoptim \
         && pecl install imagick \

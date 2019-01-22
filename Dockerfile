@@ -42,6 +42,12 @@ COPY 00-supervisor.conf /etc/supervisor/conf.d/
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /tmp/* /var/tmp/*
 
+# Installing wkhtmltopdf
+RUN apt-get install -y --no-install-recommends libfontenc1 libxfont1 xfonts-75dpi xfonts-base xfonts-encodings xfonts-utils \
+    && curl -sL https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb --output /tmp/wkhtmltox.deb --silent \
+    && dpkg -i /tmp/wkhtmltox.deb \
+    && rm /tmp/wkhtmltox.deb
+
 # forward request and error logs to docker log collector
 RUN echo Europe/Paris > /etc/timezone \
     && dpkg-reconfigure --frontend noninteractive tzdata \

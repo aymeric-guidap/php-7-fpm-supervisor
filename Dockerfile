@@ -1,22 +1,27 @@
-FROM php:7.2-fpm
+FROM php:7.2-fpm-alpine
 LABEL authors="Sylvain Marty <sylvain@guidap.co>"
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libmagickwand-dev \
-        libmagickcore-dev \
-        libcurl4-gnutls-dev \
-        zlib1g-dev \
-        libicu-dev \
+ARG TIMEZONE=Europe/Paris
+
+
+RUN apk add --no-cache \
+        $PHPIZE_DEPS \
+        tzdata \
+        imagemagick-dev \
+        libcurl \
+        zlib-dev \
+        icu-dev \
         supervisor \
         curl \
-        rsync \
         make \
-        libzip4 \
+        libzip \
+        libpng-dev \
         pngquant \
         jpegoptim \
-        && pecl install imagick \
-        && docker-php-ext-enable imagick
+        wkhtmltopdf \
+        && cp /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
+        && echo "$TIMEZONE" > /etc/timezone \
+        && apk del tzdata
 
 RUN pecl install \
         imagick \
@@ -43,14 +48,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && rm -rf /tmp/* /var/tmp/*
 
 # Installing wkhtmltopdf
-RUN apt-get install -y --no-install-recommends libfontenc1 libxfont1 xfonts-75dpi xfonts-base xfonts-encodings xfonts-utils \
-    && curl -sL https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb --output /tmp/wkhtmltox.deb --silent \
-    && dpkg -i /tmp/wkhtmltox.deb \
-    && rm /tmp/wkhtmltox.deb
+# RUN apk add --no-cache libfontenc1 libxfont1 xfonts-75dpi xfonts-base xfonts-encodings xfonts-utils \
+#     && curl -sL https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb --output /tmp/wkhtmltox.deb --silent \
+#     && dpkg -i /tmp/wkhtmltox.deb \
+#     && rm /tmp/wkhtmltox.deb
 
-# Changing local time and fixing permissions
-RUN unlink /etc/localtime \
-    && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime \
-    && dpkg-reconfigure --frontend noninteractive tzdata \
-    && chmod -R g+rwx /var/www/html \
+# Fixes permissions
+RUN chmod -R g+rwx /var/www/html \
     && umask 0007

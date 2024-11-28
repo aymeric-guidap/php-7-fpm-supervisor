@@ -1,7 +1,6 @@
 FROM php:7.4-fpm
 LABEL authors="Sylvain Marty <sylvain@guidap.co>"
 
-# Installation des dépendances système
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libmagickwand-dev \

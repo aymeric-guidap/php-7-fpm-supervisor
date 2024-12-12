@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-bullseye
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
     libmagickwand-dev \
     libmagickcore-dev \
     libcurl4-gnutls-dev \
@@ -14,22 +14,27 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     awscli \
     libzip-dev \
-    pngquant \
-    jpegoptim \
     gnupg \
     dirmngr \
     wget \
-    unzip \
+    unzip
+
+RUN apt-get install -y --no-install-recommends \
+    pngquant \
+    jpegoptim \
+    wkhtmltopdf
+
+RUN apt-get install -y --no-install-recommends \
     libfontenc1 \
     xfonts-75dpi \
     xfonts-base \
     xfonts-encodings \
-    xfonts-utils \
-    wkhtmltopdf \
-    libonig-dev \
- && pecl install imagick xdebug \
- && docker-php-ext-enable imagick xdebug \
- && docker-php-ext-install \
+    xfonts-utils
+
+RUN pecl install imagick xdebug && \
+    docker-php-ext-enable imagick xdebug
+
+RUN docker-php-ext-install -j$(nproc) \
     pdo_mysql \
     intl \
     bcmath \
@@ -38,6 +43,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sockets \
     gd \
     opcache
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-supervisor.conf /etc/supervisor/conf.d/
